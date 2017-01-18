@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url] [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Евгений Щукин](https://up.htmlacademy.ru/javascript/8/user/273519).
-* Наставник: `Неизвестно`.
+* Наставник: [Иван Долгов](https://vk.com/id10256702).
 
 ---
 
