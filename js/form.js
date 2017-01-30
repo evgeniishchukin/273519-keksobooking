@@ -74,9 +74,9 @@ noticeTimeOut.addEventListener('change', function () {
 });
 
 noticeType.addEventListener('change', function () {
-  var i = 0;
+  i = 0;
 
-  switch(noticeType.value) {
+  switch (noticeType.value) {
     case noticeTypes[i]:
       noticePrice.min = 1000;
       noticePrice.placeholder = 'от 1000';
@@ -115,7 +115,8 @@ function openDialog() {
 }
 
 function addNoticeTimeInOutOptions() {
-  for (var i = 0, j = 12; i < noticeTimeInOptions.length; i++, j++) {
+  var j;
+  for (i = 0, j = 12; i < noticeTimeInOptions.length; i++, j++) {
     noticeTimeInOptions[i].value = j;
     noticeTimeInOptions[i].text = 'После ' + j;
   }
