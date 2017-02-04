@@ -105,10 +105,10 @@ var dialogCloseKeydownHandler = function (event) {
   }
 };
 
-function pinActiveHandler () {
+function pinActiveHandler() {
   var pin = event.target;
 
-  while (pin != pinMap) {
+  while (pin !== pinMap) {
     if (pin.classList.contains('pin')) {
       if (pin.classList.contains('pin--active')) {
         pin.classList.remove('pin--active');
@@ -120,7 +120,6 @@ function pinActiveHandler () {
         pin.classList.add('pin--active');
         pin.setAttribute('aria-pressed', true);
       }
-      console.log(pin);
       return;
     }
     pin = pin.parentNode;
@@ -129,7 +128,7 @@ function pinActiveHandler () {
 
 function isActivateElement(event) {
   return event.keyCode && event.keyCode === ENTER_KEY_CODE;
-};
+}
 
 function deletePinsActive() {
   for (var i = 0; i < pins.length; i++) {
@@ -156,7 +155,7 @@ function addNoticeTimeInOutOptions() {
     noticeTimeInOptions[i].text = 'После ' + j;
   }
 
-  for (var i = 0, j = 12; i < noticeTimeOutOptions.length; i++, j++) {
+  for (i = 0, j = 12; i < noticeTimeOutOptions.length; i++, j++) {
     noticeTimeOutOptions[i].value = j;
     noticeTimeOutOptions[i].text = 'Выезд до ' + j;
   }
