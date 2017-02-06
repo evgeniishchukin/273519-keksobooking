@@ -29,7 +29,10 @@ var noticeTypes = [
   'shack',
   'palace'
 ];
+var pinMap = document.querySelector('.tokyo__pin-map');
 var pins = document.querySelectorAll('.pin');
+
+var ENTER_KEY_CODE = 13;
 
 noticeTitle.required = true;
 noticeTitle.minLength = 30;
@@ -44,25 +47,14 @@ noticeAddress.required = true;
 
 addValueToOptions();
 
-for (var i = 0; i < pins.length; i++) {
-  pins[i].addEventListener('click', function (event) {
+pinMap.addEventListener('click', function (event) {
+  pinActiveHandler(event);
+});
 
-    var pin = event.currentTarget;
-
-    if (pin.classList.contains('pin--active')) {
-      pin.classList.remove('pin--active');
-      closeDialog();
-    } else {
-      deletePinsActive();
-      openDialog();
-      pin.classList.add('pin--active');
-    }
-  });
-}
-
-dialogClose.addEventListener('click', function (event) {
-  closeDialog();
-  deletePinsActive();
+pinMap.addEventListener('keydown', function (event) {
+  if (isActivateElement(event)) {
+    pinActiveHandler(event);
+  }
 });
 
 noticeTimeIn.addEventListener('change', function () {
@@ -74,7 +66,7 @@ noticeTimeOut.addEventListener('change', function () {
 });
 
 noticeType.addEventListener('change', function () {
-  i = 0;
+  var i = 0;
 
   switch (noticeType.value) {
     case noticeTypes[i]:
@@ -100,23 +92,65 @@ noticeRoomNumber.addEventListener('change', function () {
   }
 });
 
+// Перечень функций
+var dialogCloseClickHandler = function () {
+  closeDialog();
+  deletePinsActive();
+};
+
+var dialogCloseKeydownHandler = function (event) {
+  if (isActivateElement(event)) {
+    closeDialog();
+    deletePinsActive();
+  }
+};
+
+function pinActiveHandler() {
+  var pin = event.target;
+
+  while (pin !== pinMap) {
+    if (pin.classList.contains('pin')) {
+      if (pin.classList.contains('pin--active')) {
+        pin.classList.remove('pin--active');
+        closeDialog();
+        pin.setAttribute('aria-pressed', false);
+      } else {
+        deletePinsActive();
+        openDialog();
+        pin.classList.add('pin--active');
+        pin.setAttribute('aria-pressed', true);
+      }
+      return;
+    }
+    pin = pin.parentNode;
+  }
+}
+
+function isActivateElement(event) {
+  return event.keyCode && event.keyCode === ENTER_KEY_CODE;
+}
+
 function deletePinsActive() {
-  for (i = 0; i < pins.length; i++) {
+  for (var i = 0; i < pins.length; i++) {
     pins[i].classList.remove('pin--active');
+    pins[i].setAttribute('aria-pressed', false);
   }
 }
 
 function closeDialog() {
   dialog.style.display = 'none';
+  dialogClose.removeEventListener('click', dialogCloseClickHandler);
+  dialogClose.removeEventListener('keydown', dialogCloseKeydownHandler);
 }
 
 function openDialog() {
   dialog.style.display = 'block';
+  dialogClose.addEventListener('click', dialogCloseClickHandler);
+  dialogClose.addEventListener('keydown', dialogCloseKeydownHandler);
 }
 
 function addNoticeTimeInOutOptions() {
-  var j;
-  for (i = 0, j = 12; i < noticeTimeInOptions.length; i++, j++) {
+  for (var i = 0, j = 12; i < noticeTimeInOptions.length; i++, j++) {
     noticeTimeInOptions[i].value = j;
     noticeTimeInOptions[i].text = 'После ' + j;
   }
@@ -128,19 +162,19 @@ function addNoticeTimeInOutOptions() {
 }
 
 function addNoticeTypeOptions() {
-  for (i = 0; i < noticeTypeOptions.length; i++) {
+  for (var i = 0; i < noticeTypeOptions.length; i++) {
     noticeTypeOptions[i].value = noticeTypes[i];
   }
 }
 
 function addNoticeRoomNumberOptions() {
-  for (i = 0; i < noticeRoomNumberOptions.length; i++) {
+  for (var i = 0; i < noticeRoomNumberOptions.length; i++) {
     noticeRoomNumberOptions[i].value = noticeRoomNumbers[i];
   }
 }
 
 function addNoticeCapacityOptions() {
-  for (i = 0; i < noticeCapacityOptions.length; i++) {
+  for (var i = 0; i < noticeCapacityOptions.length; i++) {
     noticeCapacityOptions[i].value = noticeCapacities[i];
   }
   noticeCapacityOptions[0].selected = false;
