@@ -6,8 +6,6 @@ var dialogClose = document.querySelector('.dialog__close');
 var pinMap = document.querySelector('.tokyo__pin-map');
 var pins = document.querySelectorAll('.pin');
 
-
-
 window.initializePins(pinMap, pins, 'pin', 'pin--active', dialog, dialogClose);
 
 // Синхнонизация времени заезда и выезда
