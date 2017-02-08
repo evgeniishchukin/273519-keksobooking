@@ -1,6 +1,8 @@
 'use strict';
 
-var initializePins = function (parentElement, elementsArray, className, classNameActive, dialogName, dialogNameClose) {
+var ENTER_KEY_CODE = 13;
+
+window.initializePins = function (parentElement, elementsArray, className, classNameActive, dialogName, dialogNameClose) {
   parentElement.addEventListener('click', function (event) {
     activeHandler(event);
   });

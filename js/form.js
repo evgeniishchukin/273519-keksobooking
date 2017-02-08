@@ -6,9 +6,9 @@ var dialogClose = document.querySelector('.dialog__close');
 var pinMap = document.querySelector('.tokyo__pin-map');
 var pins = document.querySelectorAll('.pin');
 
-var ENTER_KEY_CODE = 13;
 
-initializePins(pinMap, pins, 'pin', 'pin--active', dialog, dialogClose);
+
+window.initializePins(pinMap, pins, 'pin', 'pin--active', dialog, dialogClose);
 
 // Синхнонизация времени заезда и выезда
 var noticeTimeIn = document.querySelector('#time');
@@ -24,7 +24,7 @@ var noticeTimesOut = [
   '14'
 ];
 
-synchronizeFields(noticeTimeIn, noticeTimeOut, noticeTimesIn, noticeTimesOut, 'value');
+window.synchronizeFields(noticeTimeIn, noticeTimeOut, noticeTimesIn, noticeTimesOut, 'value');
 
 // Синхнонизация количества комнат и количества мест
 var noticeRoomNumber = document.querySelector('#room_number');
@@ -40,7 +40,7 @@ var noticeCapacities = [
   '3'
 ];
 
-synchronizeFields(noticeRoomNumber, noticeCapacity, noticeRoomNumbers, noticeCapacities, 'value');
+window.synchronizeFields(noticeRoomNumber, noticeCapacity, noticeRoomNumbers, noticeCapacities, 'value');
 
 // Синхронизация типа жилья и цены
 var noticeType = document.querySelector('#type');
@@ -56,7 +56,7 @@ var noticePrices = [
   '10000'
 ];
 
-synchronizeFields(noticeType, noticePrice, noticeTypes, noticePrices, 'value');
+window.synchronizeFields(noticeType, noticePrice, noticeTypes, noticePrices, 'value');
 
 // Изменение параметров у элементов в HTML
 var noticeTitle = document.querySelector('#title');
