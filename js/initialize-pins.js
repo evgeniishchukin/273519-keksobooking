@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 window.initializePins = (function () {
   var parentElement = document.querySelector('.tokyo__pin-map');

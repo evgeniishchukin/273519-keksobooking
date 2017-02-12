@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 window.utils = (function () {
   var dialogName = document.querySelector('.dialog');
@@ -11,7 +11,7 @@ window.utils = (function () {
 
   var isActivationEvent = function (event) {
     return event.keyCode && event.keyCode === ENTER_KEY_CODE;
-  }
+  };
 
   var clickHandler = function () {
     dialogClose();
@@ -19,7 +19,7 @@ window.utils = (function () {
   };
 
   var keyHandler = function (event) {
-    if (isActivateElement(event)) {
+    if (isActivationEvent(event)) {
       dialogClose();
       deactivateElements();
     }
@@ -30,21 +30,21 @@ window.utils = (function () {
       elementsArray[i].classList.remove(classNameActive);
       elementsArray[i].setAttribute('aria-pressed', false);
     }
-  };
+  }
 
   function dialogClose() {
     dialogName.style.display = 'none';
     dialogName.classList.add('invisible');
     dialogNameClose.removeEventListener('click', clickHandler);
     dialogNameClose.removeEventListener('click', keyHandler);
-  };
+  }
 
   function dialogOpen() {
     dialogName.style.display = 'block';
     dialogName.classList.remove('invisible');
     dialogNameClose.addEventListener('click', clickHandler);
     dialogNameClose.addEventListener('click', keyHandler);
-  };
+  }
 
   return {
     isActivationEvent: isActivationEvent,
@@ -69,6 +69,6 @@ window.utils = (function () {
         activeElement = activeElement.parentNode;
       }
     }
-  }
+  };
 
 })();
