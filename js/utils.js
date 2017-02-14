@@ -58,6 +58,7 @@ window.utils = (function () {
 
     activateElement: function (event, parentElement) {
       window.activeElement = event.target;
+      var activeElement = window.activeElement;
 
       while (activeElement !== parentElement) {
         if (activeElement.classList.contains(className)) {
