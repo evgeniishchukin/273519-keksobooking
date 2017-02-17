@@ -18,12 +18,16 @@ window.utils = (function () {
     deactivateElements();
   };
 
-  var keyHandler = function (event) {
+  var keyHandler = function () {
     if (isActivationEvent(event)) {
-      dialogClose();
+      dialogClose(function () {
+        window.activeElement.focus();
+      });
       deactivateElements();
     }
   };
+
+  dialogNameClose.addEventListener('click', clickHandler);
 
   function deactivateElements() {
     for (var i = 0; i < elementsArray.length; i++) {
@@ -32,25 +36,29 @@ window.utils = (function () {
     }
   }
 
-  function dialogClose() {
+  function dialogClose(callback) {
     dialogName.style.display = 'none';
-    dialogName.classList.add('invisible');
     dialogNameClose.removeEventListener('click', clickHandler);
-    dialogNameClose.removeEventListener('click', keyHandler);
+    dialogNameClose.removeEventListener('keydown', keyHandler);
+
+    if (typeof callback === 'function') {
+      callback();
+    }
   }
 
   function dialogOpen() {
-    dialogName.style.display = 'block';
-    dialogName.classList.remove('invisible');
+    window.showCard();
     dialogNameClose.addEventListener('click', clickHandler);
-    dialogNameClose.addEventListener('click', keyHandler);
+    dialogNameClose.addEventListener('keydown', keyHandler);
+    dialogNameClose.focus();
   }
 
   return {
     isActivationEvent: isActivationEvent,
 
     activateElement: function (event, parentElement) {
-      var activeElement = event.target;
+      window.activeElement = event.target;
+      var activeElement = window.activeElement;
 
       while (activeElement !== parentElement) {
         if (activeElement.classList.contains(className)) {

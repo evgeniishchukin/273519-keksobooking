@@ -20,14 +20,17 @@ window.initializeForm = (function () {
   var noticeAddress = document.querySelector('#address');
 
   // Синхнонизация времени заезда и выезда
-  window.synchronizeFields(noticeTimeIn, noticeTimeOut, noticeTimesIn, noticeTimesOut, 'value');
+  window.synchronizeFields(noticeTimeIn, noticeTimeOut, noticeTimesIn, noticeTimesOut, 'value', setSynchronize);
 
   // Синхнонизация количества комнат и количества мест
-  window.synchronizeFields(noticeRoomNumber, noticeCapacity, noticeRoomNumbers, noticeCapacities, 'value');
+  window.synchronizeFields(noticeRoomNumber, noticeCapacity, noticeRoomNumbers, noticeCapacities, 'value', setSynchronize);
 
   // Синхронизация типа жилья и цены
-  window.synchronizeFields(noticeType, noticePrice, noticeTypes, noticePrices, 'value');
+  window.synchronizeFields(noticeType, noticePrice, noticeTypes, noticePrices, 'value', setSynchronize);
 
+  function setSynchronize(formElement1, formElement2, formElementsArray1, formElementsArray2, property) {
+    formElement2[property] = formElementsArray2[formElementsArray1.indexOf(formElement1.value)];
+  }
   // Изменение параметров у элементов в HTML
   noticeTitle.required = true;
   noticeTitle.minLength = 30;
