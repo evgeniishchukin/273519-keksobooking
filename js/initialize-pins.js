@@ -2,14 +2,15 @@
 
 // МОДУЛЬ ОТРИСОВКИ ПИНОВ И НАВЕШИВАНИЯ НА НИХ ОЖИДАНИЯ ПО КЛИКУ И КЛАВИШАМ
 window.initializePins = (function () {
+  // Определяем область в к которой будем находить пины
+  var parentElement = document.querySelector('.tokyo__pin-map');
+
   // ЗАГРУЗКА ДАННЫХ С СЕРВЕРА
   window.load('https://intensive-javascript-server-pedmyactpq.now.sh/keksobooking/data', function (data) {
-    var block = document.querySelector('.tokyo__pin-map');
-
     // Записываем в массив данные, полученные из JSON
     window.similarApartments = data;
     // Вызываем функцию для отрисовки нового пина
-    renderPins(window.similarApartments.length, block);
+    renderPins(window.similarApartments.length, parentElement);
   });
 
   // ФУНКЦИЯ ОТРИСОВКИ ПИНОВ ИЗ ШАБЛОНА
@@ -38,9 +39,6 @@ window.initializePins = (function () {
   };
 
   // НАВЕШИВАНИЕ ОЖИДАНИЯ НА ПИНЫ
-  // Определяем область в к которой будем находить пины
-  var parentElement = document.querySelector('.tokyo__pin-map');
-
   // Определяем теги для поиска нужных пинов и настроек
   var className = 'pin';
   var classNameActive = 'pin--active';
@@ -48,11 +46,11 @@ window.initializePins = (function () {
   var ENTER_KEY_CODE = 13;
 
   // Определяем функцию активирования пинов
-  function activateElement(event, parentElement) {
+  function activateElement(event, parentEl) {
     window.activeElement = event.target;
     var activeElement = window.activeElement;
 
-    while (activeElement !== parentElement) {
+    while (activeElement !== parentEl) {
       if (activeElement.classList.contains(className)) {
         if (activeElement.classList.contains(classNameActive)) {
           activeElement.classList.remove(classNameActive);
