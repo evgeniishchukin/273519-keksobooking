@@ -18,7 +18,7 @@ window.showCard = function () {
     var classNameActive = 'pin--active';
 
     for (var i = 0; i < elementsArray.length; i++) {
-      if(elementsArray[i].classList.contains(classNameActive)) {
+      if (elementsArray[i].classList.contains(classNameActive)) {
         var elementIndex = i;
       }
     }
@@ -44,8 +44,8 @@ window.showCard = function () {
     dialogAddress.innerText = window.similarApartments[elementIndex - 1].offer.address;
     dialogPrice.innerText = window.similarApartments[elementIndex - 1].offer.price;
     dialogType.innerText = window.similarApartments[elementIndex - 1].offer.type;
-    dialogRoomsAndGuests.innerText = 'Комнат: ' + window.similarApartments[elementIndex - 1].offer.rooms + ', Мест: ' +  window.similarApartments[elementIndex - 1].offer.guests;
-    dialogCheckinTime.innerHTML = 'Время заезда: ' + window.similarApartments[elementIndex - 1].offer.checkin + '<br>' + 'Время выезда: ' +  window.similarApartments[elementIndex - 1].offer.checkout;
+    dialogRoomsAndGuests.innerText = 'Комнат: ' + window.similarApartments[elementIndex - 1].offer.rooms + ', Мест: ' + window.similarApartments[elementIndex - 1].offer.guests;
+    dialogCheckinTime.innerHTML = 'Время заезда: ' + window.similarApartments[elementIndex - 1].offer.checkin + '<br>' + 'Время выезда: ' + window.similarApartments[elementIndex - 1].offer.checkout;
 
     for (i = 0; i < window.similarApartments[elementIndex - 1].offer.features.length; i++) {
       var featureImage = document.createElement('span');
@@ -77,10 +77,7 @@ window.showCard = function () {
   renderDialog();
 
   // Определяем элементы для работы с диалогом
-  var dialogName = document.querySelector('.dialog');
   var dialogNameClose = document.querySelector('.dialog__close');
-
-  var ENTER_KEY_CODE = 13;
 
   // Определяем обработчики ожидания
   var clickHandler = function () {
@@ -89,7 +86,7 @@ window.showCard = function () {
   };
 
   var keyHandler = function () {
-    if (isActivationEvent(event)) {
+    if (window.initializePins.isActivationEvent(event)) {
       dialogClose();
       window.initializePins.deactivateElements();
     }
@@ -102,7 +99,7 @@ window.showCard = function () {
 
     window.activeElement.focus();
     document.querySelector('.dialog').remove();
-  }
+  };
 
   // Навешиваем обработчик по клику
   dialogNameClose.addEventListener('click', clickHandler);

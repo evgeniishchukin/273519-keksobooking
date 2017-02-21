@@ -75,7 +75,7 @@ window.initializePins = (function () {
       elementsArray[i].classList.remove(classNameActive);
       elementsArray[i].setAttribute('aria-pressed', false);
     }
-  }
+  };
 
   // Определяем функцию проверки нажатия клавишы
   var isActivationEvent = function (event) {
