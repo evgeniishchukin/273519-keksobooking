@@ -2,6 +2,9 @@
 
 // МОДУЛЬ ОТРИСОВКИ ПИНОВ И НАВЕШИВАНИЯ НА НИХ ОЖИДАНИЯ ПО КЛИКУ И КЛАВИШАМ
 window.initializePins = (function () {
+  // Определяем область в к которой будем находить пины
+  var parentElement = document.querySelector('.tokyo__pin-map');
+
   // ЗАГРУЗКА ДАННЫХ С СЕРВЕРА
   window.load('https://intensive-javascript-server-pedmyactpq.now.sh/keksobooking/data', function (data) {
     // Записываем в массив данные, полученные из JSON
@@ -36,8 +39,6 @@ window.initializePins = (function () {
   };
 
   // НАВЕШИВАНИЕ ОЖИДАНИЯ НА ПИНЫ
-  // Определяем область в к которой будем находить пины
-  var parentElement = document.querySelector('.tokyo__pin-map');
   // Определяем теги для поиска нужных пинов и настроек
   var className = 'pin';
   var classNameActive = 'pin--active';
