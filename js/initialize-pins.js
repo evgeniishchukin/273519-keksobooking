@@ -33,32 +33,32 @@ window.initializePins = (function () {
 
   // Определяем функцию обновление фильтра
   var updateFilters = function () {
-      filterParametrs = {
-        'type': filterType.value,
-        'price': filterPrice.value,
-        'rooms': filterRooms.value,
-        'guests': filterGuests.value,
-        'features': {
-          'wifi': filterFeatureWifi.checked,
-          'dishwasher': filterFeatureDishwacher.checked,
-          'parking': filterFeatureParking.checked,
-          'washer': filterFeatureWasher.checked,
-          'elevator': filterFeatureElevator.checked,
-          'conditioner': filterFeatureConditioner.checked
-        }
-      };
+    filterParametrs = {
+      'type': filterType.value,
+      'price': filterPrice.value,
+      'rooms': filterRooms.value,
+      'guests': filterGuests.value,
+      'features': {
+        'wifi': filterFeatureWifi.checked,
+        'dishwasher': filterFeatureDishwacher.checked,
+        'parking': filterFeatureParking.checked,
+        'washer': filterFeatureWasher.checked,
+        'elevator': filterFeatureElevator.checked,
+        'conditioner': filterFeatureConditioner.checked
+      }
     };
+  };
 
   // Запишем в объект существующие параметры
   updateFilters();
 
   // Запускаем ожидание изменения параметров фильтра
   pinFilter.addEventListener('change', function () {
-      updateFilters();
-      if (document.querySelector('.dialog')) {
-        document.querySelector('.dialog').remove();
-      }
-      renderPins(window.similarApartments.length, parentElement);
+    updateFilters();
+    if (document.querySelector('.dialog')) {
+      document.querySelector('.dialog').remove();
+    }
+    renderPins(window.similarApartments.length, parentElement);
   });
 
   // Создадим массив с данными отрисованных пинов
@@ -75,8 +75,8 @@ window.initializePins = (function () {
     if (parentElement.querySelectorAll('.pin')) {
       var elementsArray = document.querySelectorAll('.pin');
 
-      for (var i = 1; i < elementsArray.length; i++) {
-        elementsArray[i].remove();
+      for (var k = 1; k < elementsArray.length; k++) {
+        elementsArray[k].remove();
       }
     }
 
@@ -91,23 +91,23 @@ window.initializePins = (function () {
             (filterParametrs.type === 'any' || filterParametrs.type === similarApartments[i].offer.type) &&
           // Проверка соответсвия по стоимости
             (
-              (filterParametrs.price === 'low' && similarApartments[i].offer.price < 10000) ||
-              (filterParametrs.price === 'middle' && similarApartments[i].offer.price >= 10000 && similarApartments[i].offer.price <= 50000) ||
-              (filterParametrs.price === 'hight' && similarApartments[i].offer.price > 50000)
+              (filterParametrs.price === 'low' && window.similarApartments[i].offer.price < 10000) ||
+              (filterParametrs.price === 'middle' &&  window.similarApartments[i].offer.price >= 10000 && similarApartments[i].offer.price <= 50000) ||
+              (filterParametrs.price === 'hight' &&  window.similarApartments[i].offer.price > 50000)
             ) &&
             // Проверка соответсвия по количеству комнат
-            (filterParametrs.rooms === 'any' || +filterParametrs.rooms === similarApartments[i].offer.rooms) &&
+            (filterParametrs.rooms === 'any' || +filterParametrs.rooms ===  window.similarApartments[i].offer.rooms) &&
             // Проверка соответсвия по количеству гостей
-            (filterParametrs.guests === 'any' || +filterParametrs.guests === similarApartments[i].offer.guests) &&
+            (filterParametrs.guests === 'any' || +filterParametrs.guests ===  window.similarApartments[i].offer.guests) &&
             // Проверка соответсвия по удобствам
-            (!filterParametrs.features.wifi || filterParametrs.features && similarApartments[i].offer.features.indexOf('wifi') !== -1) &&
-            (!filterParametrs.features.dishwasher || filterParametrs.features && similarApartments[i].offer.features.indexOf('dishwasher') !== -1) &&
-            (!filterParametrs.features.parking || filterParametrs.features && similarApartments[i].offer.features.indexOf('parking') !== -1) &&
-            (!filterParametrs.features.washer || filterParametrs.features && similarApartments[i].offer.features.indexOf('washer') !== -1) &&
-            (!filterParametrs.features.elevator || filterParametrs.features && similarApartments[i].offer.features.indexOf('elevator') !== -1) &&
-            (!filterParametrs.features.conditioner || filterParametrs.features && similarApartments[i].offer.features.indexOf('conditioner') !== -1)
+            (!filterParametrs.features.wifi || filterParametrs.features &&  window.similarApartments[i].offer.features.indexOf('wifi') !== -1) &&
+            (!filterParametrs.features.dishwasher || filterParametrs.features &&  window.similarApartments[i].offer.features.indexOf('dishwasher') !== -1) &&
+            (!filterParametrs.features.parking || filterParametrs.features &&  window.similarApartments[i].offer.features.indexOf('parking') !== -1) &&
+            (!filterParametrs.features.washer || filterParametrs.features &&  window.similarApartments[i].offer.features.indexOf('washer') !== -1) &&
+            (!filterParametrs.features.elevator || filterParametrs.features &&  window.similarApartments[i].offer.features.indexOf('elevator') !== -1) &&
+            (!filterParametrs.features.conditioner || filterParametrs.features &&  window.similarApartments[i].offer.features.indexOf('conditioner') !== -1)
           );
-      }
+      };
 
       // Проверяем можно ли данный пин отрисовывать в DOM
       if (validPin()) {
