@@ -1,7 +1,7 @@
 'use strict';
 
 // ФУНКЦИЯ ОТРИСОВКИ ДИАЛОГОВОГО ОКНА
-window.showCard = function () {
+window.showCard = function (dialogData) {
   var parentDialog = document.querySelector('.tokyo');  // определяем блок, куда будем вставлять шаблон
   var templateDialog = document.querySelector('#dialog-template'); // находим шаблон
   var dialogToClone = templateDialog.content.querySelector('.dialog'); // то что будем копировать в шаблоне
@@ -19,12 +19,28 @@ window.showCard = function () {
 
     for (var i = 0; i < elementsArray.length; i++) {
       if (elementsArray[i].classList.contains(classNameActive)) {
-        var elementIndex = i;
+        var elementIndex = i - 1;
       }
     }
 
     // Копируем диалог из шаблона
     var newDialog = dialogToClone.cloneNode(true);
+
+    // Задаем функцию перевода наименования жилья
+    var filterByType = function (type) {
+      var typeValue = null;
+      switch (type) {
+        case 'flat':
+          typeValue = 'Квартира';
+          break;
+        case 'bungalo':
+          typeValue = 'Бунгало';
+          break;
+        case 'house':
+          typeValue = 'Дом';
+      }
+      return typeValue;
+    };
 
     // Наполняем диалог содержимым
     var dialogAvatar = newDialog.querySelector('.dialog__avatar');
@@ -39,32 +55,32 @@ window.showCard = function () {
     var dialogPhotos = newDialog.querySelector('.lodge__photos');
 
 
-    dialogAvatar.src = window.similarApartments[elementIndex - 1].author.avatar;
-    dialogTitle.innerText = window.similarApartments[elementIndex - 1].offer.title;
-    dialogAddress.innerText = window.similarApartments[elementIndex - 1].offer.address;
-    dialogPrice.innerText = window.similarApartments[elementIndex - 1].offer.price;
-    dialogType.innerText = window.similarApartments[elementIndex - 1].offer.type;
-    dialogRoomsAndGuests.innerText = 'Комнат: ' + window.similarApartments[elementIndex - 1].offer.rooms + ', Мест: ' + window.similarApartments[elementIndex - 1].offer.guests;
-    dialogCheckinTime.innerHTML = 'Время заезда: ' + window.similarApartments[elementIndex - 1].offer.checkin + '<br>' + 'Время выезда: ' + window.similarApartments[elementIndex - 1].offer.checkout;
+    dialogAvatar.src = dialogData[elementIndex].author.avatar;
+    dialogTitle.innerText = dialogData[elementIndex].offer.title;
+    dialogAddress.innerText = dialogData[elementIndex].offer.address;
+    dialogPrice.innerText = dialogData[elementIndex].offer.price + ' руб./сутки';
+    dialogType.innerText = filterByType(dialogData[elementIndex].offer.type);
+    dialogRoomsAndGuests.innerText = 'Комнат: ' + dialogData[elementIndex].offer.rooms + ', Мест: ' + dialogData[elementIndex].offer.guests;
+    dialogCheckinTime.innerHTML = 'Время заезда: ' + dialogData[elementIndex].offer.checkin + '<br>' + 'Время выезда: ' + dialogData[elementIndex].offer.checkout;
 
-    for (i = 0; i < window.similarApartments[elementIndex - 1].offer.features.length; i++) {
+    for (i = 0; i < dialogData[elementIndex].offer.features.length; i++) {
       var featureImage = document.createElement('span');
 
       featureImage.classList.add('feature__image');
-      featureImage.classList.add('feature__image--' + window.similarApartments[elementIndex - 1].offer.features[i]);
+      featureImage.classList.add('feature__image--' + dialogData[elementIndex].offer.features[i]);
 
       dialogFeatures.appendChild(featureImage);
     }
 
-    dialogDescription.innerText = window.similarApartments[elementIndex - 1].offer.description;
+    dialogDescription.innerText = dialogData[elementIndex].offer.description;
 
-    for (i = 0; i < window.similarApartments[elementIndex - 1].offer.photos.length; i++) {
+    for (i = 0; i < dialogData[elementIndex].offer.photos.length; i++) {
       var dialogPhoto = document.createElement('img');
 
       dialogPhoto.setAttribute('width', '52');
       dialogPhoto.setAttribute('height', '42');
       dialogPhoto.setAttribute('alt', 'Фотография места');
-      dialogPhoto.setAttribute('src', window.similarApartments[elementIndex - 1].offer.photos[i]);
+      dialogPhoto.setAttribute('src', dialogData[elementIndex].offer.photos[i]);
 
       dialogPhotos.appendChild(dialogPhoto);
     }
@@ -103,7 +119,4 @@ window.showCard = function () {
 
   // Навешиваем обработчик по клику
   dialogNameClose.addEventListener('click', clickHandler);
-
-  // Показываем диалоговое окно
-  // dialogName.style.display = 'block';
 };

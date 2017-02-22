@@ -13,6 +13,57 @@ window.initializePins = (function () {
     renderPins(window.similarApartments.length, parentElement);
   });
 
+  // СОЗДАЕМ ФИЛЬТР
+  // Определяем переменные для фильтра
+  var pinFilter = document.querySelector('.tokyo__filters-container');
+  var filterType = pinFilter.querySelector('#housing_type');
+  var filterPrice = pinFilter.querySelector('#housing_price');
+  var filterRooms = pinFilter.querySelector('#housing_room-number');
+  var filterGuests = pinFilter.querySelector('#housing_guests-number');
+  var filterFeatures = pinFilter.querySelector('#housing_features');
+  var filterFeatureWifi = filterFeatures.querySelector('[value=wifi]');
+  var filterFeatureDishwacher = filterFeatures.querySelector('[value=dishwasher]');
+  var filterFeatureParking = filterFeatures.querySelector('[value=parking]');
+  var filterFeatureWasher = filterFeatures.querySelector('[value=washer]');
+  var filterFeatureElevator = filterFeatures.querySelector('[value=elevator]');
+  var filterFeatureConditioner = filterFeatures.querySelector('[value=conditioner]');
+
+  // Определяем объект для хранения переменных фильтра
+  var filterParametrs = {};
+
+  // Определяем функцию обновление фильтра
+  var updateFilters = function () {
+      filterParametrs = {
+        'type': filterType.value,
+        'price': filterPrice.value,
+        'rooms': filterRooms.value,
+        'guests': filterGuests.value,
+        'features': {
+          'wifi': filterFeatureWifi.checked,
+          'dishwasher': filterFeatureDishwacher.checked,
+          'parking': filterFeatureParking.checked,
+          'washer': filterFeatureWasher.checked,
+          'elevator': filterFeatureElevator.checked,
+          'conditioner': filterFeatureConditioner.checked
+        }
+      };
+    };
+
+  // Запишем в объект существующие параметры
+  updateFilters();
+
+  // Запускаем ожидание изменения параметров фильтра
+  pinFilter.addEventListener('change', function () {
+      updateFilters();
+      if (document.querySelector('.dialog')) {
+        document.querySelector('.dialog').remove();
+      }
+      renderPins(window.similarApartments.length, parentElement);
+  });
+
+  // Создадим массив с данными отрисованных пинов
+  var dialogData = [];
+
   // ФУНКЦИЯ ОТРИСОВКИ ПИНОВ ИЗ ШАБЛОНА
   var renderPins = function (amount, array) {
     // Находим шаблон
@@ -20,22 +71,66 @@ window.initializePins = (function () {
     // То, что будем копировать в шаблоне
     var elementToClone = templateElement.content.querySelector('.pin');
 
-    // Создаем цикл, чтобы пройтись по пинам
-    for (var i = 0; i < amount; i++) {
-      // клонируем новый пин из шаблона
-      var newPin = elementToClone.cloneNode(true);
-      var imageOfPin = newPin.querySelector('.rounded');
+    // Удаляем все ранее созданные элементы
+    if (parentElement.querySelectorAll('.pin')) {
+      var elementsArray = document.querySelectorAll('.pin');
 
-      // Изменение аватарки пина
-      imageOfPin.src = window.similarApartments[i].author.avatar;
-
-      // Значения координат из data
-      newPin.style.left = window.similarApartments[i].location.x + 'px';
-      newPin.style.top = window.similarApartments[i].location.y + 'px';
-
-      // Вставляем пин в DOM
-      array.appendChild(newPin);
+      for (var i = 1; i < elementsArray.length; i++) {
+        elementsArray[i].remove();
+      }
     }
+
+    // Обнулим массив с данными
+    dialogData = [];
+
+    // Создаем цикл, чтобы пройтись по пинам
+    for (var i = 0, j = 0; i < amount; i++) {
+      var validPin = function () {
+        return (
+          // Проверка соответсвия по типу
+            (filterParametrs.type === 'any' || filterParametrs.type === similarApartments[i].offer.type) &&
+          // Проверка соответсвия по стоимости
+            (
+              (filterParametrs.price === 'low' && similarApartments[i].offer.price < 10000) ||
+              (filterParametrs.price === 'middle' && similarApartments[i].offer.price >= 10000 && similarApartments[i].offer.price <= 50000) ||
+              (filterParametrs.price === 'hight' && similarApartments[i].offer.price > 50000)
+            ) &&
+            // Проверка соответсвия по количеству комнат
+            (filterParametrs.rooms === 'any' || +filterParametrs.rooms === similarApartments[i].offer.rooms) &&
+            // Проверка соответсвия по количеству гостей
+            (filterParametrs.guests === 'any' || +filterParametrs.guests === similarApartments[i].offer.guests) &&
+            // Проверка соответсвия по удобствам
+            (!filterParametrs.features.wifi || filterParametrs.features && similarApartments[i].offer.features.indexOf('wifi') !== -1) &&
+            (!filterParametrs.features.dishwasher || filterParametrs.features && similarApartments[i].offer.features.indexOf('dishwasher') !== -1) &&
+            (!filterParametrs.features.parking || filterParametrs.features && similarApartments[i].offer.features.indexOf('parking') !== -1) &&
+            (!filterParametrs.features.washer || filterParametrs.features && similarApartments[i].offer.features.indexOf('washer') !== -1) &&
+            (!filterParametrs.features.elevator || filterParametrs.features && similarApartments[i].offer.features.indexOf('elevator') !== -1) &&
+            (!filterParametrs.features.conditioner || filterParametrs.features && similarApartments[i].offer.features.indexOf('conditioner') !== -1)
+          );
+      }
+
+      // Проверяем можно ли данный пин отрисовывать в DOM
+      if (validPin()) {
+        // клонируем новый пин из шаблона
+        var newPin = elementToClone.cloneNode(true);
+        var imageOfPin = newPin.querySelector('.rounded');
+
+        // Изменение аватарки пина
+        imageOfPin.src = window.similarApartments[i].author.avatar;
+
+        // Значения координат из data
+        newPin.style.left = window.similarApartments[i].location.x + 'px';
+        newPin.style.top = window.similarApartments[i].location.y + 'px';
+
+        // Добавляем информацию об отрисованном элементе в созданный ранее массив
+        dialogData[j] = window.similarApartments[i];
+        j++;
+
+        // Вставляем пин в DOM
+        array.appendChild(newPin);
+      }
+    }
+    return dialogData;
   };
 
   // НАВЕШИВАНИЕ ОЖИДАНИЯ НА ПИНЫ
@@ -50,21 +145,25 @@ window.initializePins = (function () {
     window.activeElement = event.target;
     var activeElement = window.activeElement;
 
-    while (activeElement !== parentEl) {
-      if (activeElement.classList.contains(className)) {
-        if (activeElement.classList.contains(classNameActive)) {
-          activeElement.classList.remove(classNameActive);
-          document.querySelector('.dialog').remove();
-          activeElement.setAttribute('aria-pressed', false);
-        } else {
-          deactivateElements();
-          activeElement.classList.add(classNameActive);
-          activeElement.setAttribute('aria-pressed', true);
-          window.showCard();
+    // Выполним проверку при нажатии, является ли данный пин главным, если нет, то выполняем активацию
+    if (!activeElement.classList.contains('pin__main') && !activeElement.parentNode.classList.contains('pin__main')) {
+      while (activeElement !== parentEl) {
+        if (activeElement.classList.contains(className)) {
+          if (activeElement.classList.contains(classNameActive)) {
+            activeElement.classList.remove(classNameActive);
+            document.querySelector('.dialog').remove();
+            activeElement.setAttribute('aria-pressed', false);
+          } else {
+            deactivateElements();
+            activeElement.classList.add(classNameActive);
+            activeElement.setAttribute('aria-pressed', true);
+            window.showCard(dialogData);
+          }
+          return;
         }
-        return;
+        activeElement = activeElement.parentNode;
       }
-      activeElement = activeElement.parentNode;
+
     }
   }
 
