@@ -133,6 +133,85 @@ window.initializePins = (function () {
     return dialogData;
   };
 
+  // СОЗДАЕМ ФУНКЦИЮ ПЕРЕТАСКИВАНИЯ ГЛАВНОГО ПИНА
+  (function () {
+    var pinMain = document.querySelector('.pin__main');
+    var pinMainParent = document.querySelector('.tokyo')
+    var startPoint;
+
+    // Определим координаты окна родителя и дополнительные координаты для расчета пределов перемещения элемента
+    var pinMainCoordinates = pinMain.getBoundingClientRect();
+    var pinMainParentCoordinates = pinMainParent.getBoundingClientRect();
+
+    // Определим предел перемещения элемента
+    var moveLimitX = pinMainParentCoordinates.width - pinMainCoordinates.width / 2;
+    var moveLimitY = pinMainParentCoordinates.height - pinMainCoordinates.height;
+
+    // Добавим функцию обработки движения мыши
+    var onMouseMove = function (moveEvent) {
+      moveEvent.preventDefault();
+
+      var shift = {
+        x: startPoint.x - moveEvent.clientX,
+        y: startPoint.y - moveEvent.clientY
+      };
+
+      // Зададим ограничение на перемещение элемента
+      pinMain.style.left = ((pinMain.offsetLeft - shift.x > moveLimitX)? moveLimitX
+      : (pinMain.offsetLeft - shift.x < (0 - pinMainCoordinates.width / 2))? (0 - pinMainCoordinates.width / 2)
+      : pinMain.offsetLeft - shift.x)
+      + 'px';
+
+      pinMain.style.top = ((pinMain.offsetTop - shift.y > moveLimitY)? moveLimitY
+      : (pinMain.offsetTop - shift.y < (0 - pinMainCoordinates.height))? (0 - pinMainCoordinates.height)
+      : pinMain.offsetTop - shift.y)
+      + 'px';
+
+      startPoint = {
+        x: moveEvent.clientX,
+        y: moveEvent.clientY
+      };
+
+      var pinMainCoordinatesXY =   document.querySelector('#address');
+      pinMainCoordinatesXY.value = 'x:' + startPoint.x + ' y:' + startPoint.y;
+    };
+
+    // Уберем лишнее навешивание обработчиков, для этого объявим переменную проверки перетаскивания
+    var isDragging = false;
+
+    // Снимем обработчик нажатия на мышь
+    var onMouseUp = function (upEvent) {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      // При снятии нажатия, переменная проверки перетаскивания получит значение false;
+      isDragging = false;
+    };
+
+    // Навешиваем обработчик нажатия мыши на аватар диалога.
+    pinMain.addEventListener('mousedown', function (event) {
+      event.preventDefault();
+
+      // Проверим, не перетаскиваем ли мы диалог и если да, то снимем старые обработчики нажатия на мышь
+      if(isDragging) {
+        onMouseUp();
+      }
+
+      // При нажатии переменная проверки перетаскивания получит значение true;
+      isDragging = true;
+
+      // Сохраним начальные координаты
+      startPoint = {
+        x: event.clientX,
+        y: event.clientY
+      };
+
+      // Включим обработчики действий с мышью
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+  })();
+
   // НАВЕШИВАНИЕ ОЖИДАНИЯ НА ПИНЫ
   // Определяем теги для поиска нужных пинов и настроек
   var className = 'pin';
