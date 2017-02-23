@@ -136,7 +136,7 @@ window.initializePins = (function () {
   // СОЗДАЕМ ФУНКЦИЮ ПЕРЕТАСКИВАНИЯ ГЛАВНОГО ПИНА
   (function () {
     var pinMain = document.querySelector('.pin__main');
-    var pinMainParent = document.querySelector('.tokyo')
+    var pinMainParent = document.querySelector('.tokyo');
     var startPoint;
 
     // Определим координаты окна родителя и дополнительные координаты для расчета пределов перемещения элемента
@@ -157,22 +157,28 @@ window.initializePins = (function () {
       };
 
       // Зададим ограничение на перемещение элемента
-      pinMain.style.left = ((pinMain.offsetLeft - shift.x > moveLimitX)? moveLimitX
-      : (pinMain.offsetLeft - shift.x < (0 - pinMainCoordinates.width / 2))? (0 - pinMainCoordinates.width / 2)
-      : pinMain.offsetLeft - shift.x)
-      + 'px';
+      if (pinMain.offsetLeft - shift.x > moveLimitX) {
+        pinMain.style.left = moveLimitX + 'px';
+      } else if (pinMain.offsetLeft - shift.x < (0 - pinMainCoordinates.width / 2)) {
+        pinMain.style.left = (0 - pinMainCoordinates.width / 2) + 'px';
+      } else {
+        pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
+      }
 
-      pinMain.style.top = ((pinMain.offsetTop - shift.y > moveLimitY)? moveLimitY
-      : (pinMain.offsetTop - shift.y < (0 - pinMainCoordinates.height))? (0 - pinMainCoordinates.height)
-      : pinMain.offsetTop - shift.y)
-      + 'px';
+      if (pinMain.offsetTop - shift.y > moveLimitY) {
+        pinMain.style.top = moveLimitY + 'px';
+      } else if (pinMain.offsetTop - shift.y < (0 - pinMainCoordinates.height)) {
+        pinMain.style.top = (0 - pinMainCoordinates.height) + 'px';
+      } else {
+        pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
+      }
 
       startPoint = {
         x: moveEvent.clientX,
         y: moveEvent.clientY
       };
 
-      var pinMainCoordinatesXY =   document.querySelector('#address');
+      var pinMainCoordinatesXY = document.querySelector('#address');
       pinMainCoordinatesXY.value = 'x:' + startPoint.x + ' y:' + startPoint.y;
     };
 
@@ -193,7 +199,7 @@ window.initializePins = (function () {
       event.preventDefault();
 
       // Проверим, не перетаскиваем ли мы диалог и если да, то снимем старые обработчики нажатия на мышь
-      if(isDragging) {
+      if (isDragging) {
         onMouseUp();
       }
 

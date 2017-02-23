@@ -120,15 +120,21 @@ window.showCard = function (dialogData) {
       };
 
       // Зададим ограничение на перемещение элемента
-      dialog.style.left = ((dialog.offsetLeft - shift.x > moveLimitX)? moveLimitX
-      : (dialog.offsetLeft - shift.x < 0)? 0
-      : dialog.offsetLeft - shift.x)
-      + 'px';
+      if (dialog.offsetLeft - shift.x > moveLimitX) {
+        dialog.style.left = moveLimitX + 'px';
+      } else if (dialog.offsetLeft - shift.x < 0) {
+        dialog.style.left = 0;
+      } else {
+        dialog.style.left = (dialog.offsetLeft - shift.x) + 'px';
+      }
 
-      dialog.style.top = ((dialog.offsetTop - shift.y > moveLimitY)? moveLimitY
-      : (dialog.offsetTop - shift.y < 0)? 0
-      : dialog.offsetTop - shift.y)
-      + 'px';
+      if (dialog.offsetTop - shift.y > moveLimitY) {
+        dialog.style.top = moveLimitY + 'px';
+      } else if (dialog.offsetTop - shift.y < 0) {
+        dialog.style.top = 0;
+      } else {
+        dialog.style.top = (dialog.offsetTop - shift.y) + 'px';
+      }
 
       startPoint = {
         x: moveEvent.clientX,
@@ -153,7 +159,7 @@ window.showCard = function (dialogData) {
       event.preventDefault();
 
       // Проверим, не перетаскиваем ли мы диалог и если да, то снимем старые обработчики нажатия на мышь
-      if(isDragging) {
+      if (isDragging) {
         onMouseUp();
       }
 
