@@ -19,27 +19,25 @@ window.showCard = function (dialogData) {
 
     for (var i = 0; i < elementsArray.length; i++) {
       if (elementsArray[i].classList.contains(classNameActive)) {
-        var elementIndex = i - 1;
+        var dialogDataIndex = dialogData[i - 1];
+        break;
       }
     }
 
     // Копируем диалог из шаблона
     var newDialog = dialogToClone.cloneNode(true);
 
-    // Задаем функцию перевода наименования жилья
-    var filterByType = function (type) {
-      var typeValue = null;
-      switch (type) {
-        case 'flat':
-          typeValue = 'Квартира';
-          break;
-        case 'bungalo':
-          typeValue = 'Бунгало';
-          break;
-        case 'house':
-          typeValue = 'Дом';
+    // Задаем переменную перевода наименования жилья
+    var types = {
+      'flat': function () {
+        return 'Квартира';
+      },
+      'bungalo': function () {
+        return 'Бунгало';
+      },
+      'house': function () {
+        return 'Дом';
       }
-      return typeValue;
     };
 
     // Наполняем диалог содержимым
@@ -55,32 +53,32 @@ window.showCard = function (dialogData) {
     var dialogPhotos = newDialog.querySelector('.lodge__photos');
 
 
-    dialogAvatar.src = dialogData[elementIndex].author.avatar;
-    dialogTitle.innerText = dialogData[elementIndex].offer.title;
-    dialogAddress.innerText = dialogData[elementIndex].offer.address;
-    dialogPrice.innerText = dialogData[elementIndex].offer.price + ' руб./сутки';
-    dialogType.innerText = filterByType(dialogData[elementIndex].offer.type);
-    dialogRoomsAndGuests.innerText = 'Комнат: ' + dialogData[elementIndex].offer.rooms + ', Мест: ' + dialogData[elementIndex].offer.guests;
-    dialogCheckinTime.innerHTML = 'Время заезда: ' + dialogData[elementIndex].offer.checkin + '<br>' + 'Время выезда: ' + dialogData[elementIndex].offer.checkout;
+    dialogAvatar.src = dialogDataIndex.author.avatar;
+    dialogTitle.innerText = dialogDataIndex.offer.title;
+    dialogAddress.innerText = dialogDataIndex.offer.address;
+    dialogPrice.innerText = dialogDataIndex.offer.price + ' руб./сутки';
+    dialogType.innerText = types[dialogDataIndex.offer.type]();
+    dialogRoomsAndGuests.innerText = 'Комнат: ' + dialogDataIndex.offer.rooms + ', Мест: ' + dialogDataIndex.offer.guests;
+    dialogCheckinTime.innerHTML = 'Время заезда: ' + dialogDataIndex.offer.checkin + '<br>' + 'Время выезда: ' + dialogDataIndex.offer.checkout;
 
-    for (i = 0; i < dialogData[elementIndex].offer.features.length; i++) {
+    for (i = 0; i < dialogDataIndex.offer.features.length; i++) {
       var featureImage = document.createElement('span');
 
       featureImage.classList.add('feature__image');
-      featureImage.classList.add('feature__image--' + dialogData[elementIndex].offer.features[i]);
+      featureImage.classList.add('feature__image--' + dialogDataIndex.offer.features[i]);
 
       dialogFeatures.appendChild(featureImage);
     }
 
-    dialogDescription.innerText = dialogData[elementIndex].offer.description;
+    dialogDescription.innerText = dialogDataIndex.offer.description;
 
-    for (i = 0; i < dialogData[elementIndex].offer.photos.length; i++) {
+    for (i = 0; i < dialogDataIndex.offer.photos.length; i++) {
       var dialogPhoto = document.createElement('img');
 
       dialogPhoto.setAttribute('width', '52');
       dialogPhoto.setAttribute('height', '42');
       dialogPhoto.setAttribute('alt', 'Фотография места');
-      dialogPhoto.setAttribute('src', dialogData[elementIndex].offer.photos[i]);
+      dialogPhoto.setAttribute('src', dialogDataIndex.offer.photos[i]);
 
       dialogPhotos.appendChild(dialogPhoto);
     }
@@ -113,6 +111,8 @@ window.showCard = function (dialogData) {
     // Добавим функцию обработки движения мыши
     var onMouseMove = function (moveEvent) {
       moveEvent.preventDefault();
+
+      dialog.style.zIndex = 100;
 
       var shift = {
         x: startPoint.x - moveEvent.clientX,

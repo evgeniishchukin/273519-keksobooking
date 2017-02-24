@@ -54,9 +54,11 @@ window.initializePins = (function () {
 
   // Запускаем ожидание изменения параметров фильтра
   pinFilter.addEventListener('change', function () {
+    var dialog = document.querySelector('.dialog');
+
     updateFilters();
-    if (document.querySelector('.dialog')) {
-      document.querySelector('.dialog').remove();
+    if (dialog) {
+      dialog.remove();
     }
     renderPins(window.similarApartments.length, parentElement);
   });
@@ -72,7 +74,9 @@ window.initializePins = (function () {
     var elementToClone = templateElement.content.querySelector('.pin');
 
     // Удаляем все ранее созданные элементы
-    if (parentElement.querySelectorAll('.pin')) {
+    var pins = parentElement.querySelectorAll('.pin');
+
+    if (pins) {
       var elementsArray = document.querySelectorAll('.pin');
 
       for (var k = 1; k < elementsArray.length; k++) {
@@ -80,50 +84,57 @@ window.initializePins = (function () {
       }
     }
 
+    // Определим функцию на проверку валидности пина
+    var validPin = function (index) {
+      var apartmentsDataIndex = window.similarApartments[index];
+      return (
+        // Проверка соответсвия по типу
+          (filterParametrs.type === 'any' || filterParametrs.type === apartmentsDataIndex.offer.type) &&
+        // Проверка соответсвия по стоимости
+          (
+            (filterParametrs.price === 'low' && apartmentsDataIndex.offer.price < 10000) ||
+            (filterParametrs.price === 'middle' && apartmentsDataIndex.offer.price >= 10000 && apartmentsDataIndex.offer.price <= 50000) ||
+            (filterParametrs.price === 'hight' && apartmentsDataIndex.offer.price > 50000)
+          ) &&
+          // Проверка соответсвия по количеству комнат
+          (filterParametrs.rooms === 'any' || +filterParametrs.rooms === apartmentsDataIndex.offer.rooms) &&
+          // Проверка соответсвия по количеству гостей
+          (filterParametrs.guests === 'any' || +filterParametrs.guests === apartmentsDataIndex.offer.guests) &&
+          // Проверка соответсвия по удобствам
+          (!filterParametrs.features.wifi || filterParametrs.features && apartmentsDataIndex.offer.features.indexOf('wifi') !== -1) &&
+          (!filterParametrs.features.dishwasher || filterParametrs.features && apartmentsDataIndex.offer.features.indexOf('dishwasher') !== -1) &&
+          (!filterParametrs.features.parking || filterParametrs.features && apartmentsDataIndex.offer.features.indexOf('parking') !== -1) &&
+          (!filterParametrs.features.washer || filterParametrs.features && apartmentsDataIndex.offer.features.indexOf('washer') !== -1) &&
+          (!filterParametrs.features.elevator || filterParametrs.features && apartmentsDataIndex.offer.features.indexOf('elevator') !== -1) &&
+          (!filterParametrs.features.conditioner || filterParametrs.features && apartmentsDataIndex.offer.features.indexOf('conditioner') !== -1)
+        )
+    };
+
     // Обнулим массив с данными
     dialogData = [];
 
     // Создаем цикл, чтобы пройтись по пинам
     for (var i = 0, j = 0; i < amount; i++) {
-      var validPin = function () {
-        return (
-          // Проверка соответсвия по типу
-            (filterParametrs.type === 'any' || filterParametrs.type === window.similarApartments[i].offer.type) &&
-          // Проверка соответсвия по стоимости
-            (
-              (filterParametrs.price === 'low' && window.similarApartments[i].offer.price < 10000) ||
-              (filterParametrs.price === 'middle' && window.similarApartments[i].offer.price >= 10000 && window.similarApartments[i].offer.price <= 50000) ||
-              (filterParametrs.price === 'hight' && window.similarApartments[i].offer.price > 50000)
-            ) &&
-            // Проверка соответсвия по количеству комнат
-            (filterParametrs.rooms === 'any' || +filterParametrs.rooms === window.similarApartments[i].offer.rooms) &&
-            // Проверка соответсвия по количеству гостей
-            (filterParametrs.guests === 'any' || +filterParametrs.guests === window.similarApartments[i].offer.guests) &&
-            // Проверка соответсвия по удобствам
-            (!filterParametrs.features.wifi || filterParametrs.features && window.similarApartments[i].offer.features.indexOf('wifi') !== -1) &&
-            (!filterParametrs.features.dishwasher || filterParametrs.features && window.similarApartments[i].offer.features.indexOf('dishwasher') !== -1) &&
-            (!filterParametrs.features.parking || filterParametrs.features && window.similarApartments[i].offer.features.indexOf('parking') !== -1) &&
-            (!filterParametrs.features.washer || filterParametrs.features && window.similarApartments[i].offer.features.indexOf('washer') !== -1) &&
-            (!filterParametrs.features.elevator || filterParametrs.features && window.similarApartments[i].offer.features.indexOf('elevator') !== -1) &&
-            (!filterParametrs.features.conditioner || filterParametrs.features && window.similarApartments[i].offer.features.indexOf('conditioner') !== -1)
-          );
-      };
+      // Определим валидность пина
+      validPin(i);
+
+      var apartmentsDataIndex = window.similarApartments[i];
 
       // Проверяем можно ли данный пин отрисовывать в DOM
-      if (validPin()) {
+      if (validPin(i)) {
         // клонируем новый пин из шаблона
         var newPin = elementToClone.cloneNode(true);
         var imageOfPin = newPin.querySelector('.rounded');
 
         // Изменение аватарки пина
-        imageOfPin.src = window.similarApartments[i].author.avatar;
+        imageOfPin.src = apartmentsDataIndex.author.avatar;
 
         // Значения координат из data
-        newPin.style.left = window.similarApartments[i].location.x + 'px';
-        newPin.style.top = window.similarApartments[i].location.y + 'px';
+        newPin.style.left = apartmentsDataIndex.location.x + 'px';
+        newPin.style.top = apartmentsDataIndex.location.y + 'px';
 
         // Добавляем информацию об отрисованном элементе в созданный ранее массив
-        dialogData[j] = window.similarApartments[i];
+        dialogData[j] = apartmentsDataIndex;
         j++;
 
         // Вставляем пин в DOM
@@ -151,6 +162,8 @@ window.initializePins = (function () {
     var onMouseMove = function (moveEvent) {
       moveEvent.preventDefault();
 
+      pinMain.style.zIndex = 101;
+
       var shift = {
         x: startPoint.x - moveEvent.clientX,
         y: startPoint.y - moveEvent.clientY
@@ -167,8 +180,8 @@ window.initializePins = (function () {
 
       if (pinMain.offsetTop - shift.y > moveLimitY) {
         pinMain.style.top = moveLimitY + 'px';
-      } else if (pinMain.offsetTop - shift.y < (0 - pinMainCoordinates.height)) {
-        pinMain.style.top = (0 - pinMainCoordinates.height) + 'px';
+      } else if (pinMain.offsetTop - shift.y < (0 - pinMainCoordinates.height * 0.8)) {
+        pinMain.style.top = (0 - pinMainCoordinates.height * 0.8) + 'px';
       } else {
         pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
       }
@@ -248,7 +261,6 @@ window.initializePins = (function () {
         }
         activeElement = activeElement.parentNode;
       }
-
     }
   }
 
