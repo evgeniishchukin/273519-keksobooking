@@ -112,8 +112,6 @@ window.showCard = function (dialogData) {
     var onMouseMove = function (moveEvent) {
       moveEvent.preventDefault();
 
-      dialog.style.zIndex = 100;
-
       var shift = {
         x: startPoint.x - moveEvent.clientX,
         y: startPoint.y - moveEvent.clientY
@@ -157,6 +155,8 @@ window.showCard = function (dialogData) {
     // Навешиваем обработчик нажатия мыши на аватар диалога.
     dialogAvatarHandler.addEventListener('mousedown', function (event) {
       event.preventDefault();
+
+      dialog.style.zIndex = 100;
 
       // Проверим, не перетаскиваем ли мы диалог и если да, то снимем старые обработчики нажатия на мышь
       if (isDragging) {

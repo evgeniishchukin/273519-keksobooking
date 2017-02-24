@@ -107,7 +107,7 @@ window.initializePins = (function () {
           (!filterParametrs.features.washer || filterParametrs.features && apartmentsDataIndex.offer.features.indexOf('washer') !== -1) &&
           (!filterParametrs.features.elevator || filterParametrs.features && apartmentsDataIndex.offer.features.indexOf('elevator') !== -1) &&
           (!filterParametrs.features.conditioner || filterParametrs.features && apartmentsDataIndex.offer.features.indexOf('conditioner') !== -1)
-        )
+        );
     };
 
     // Обнулим массив с данными
@@ -162,8 +162,6 @@ window.initializePins = (function () {
     var onMouseMove = function (moveEvent) {
       moveEvent.preventDefault();
 
-      pinMain.style.zIndex = 101;
-
       var shift = {
         x: startPoint.x - moveEvent.clientX,
         y: startPoint.y - moveEvent.clientY
@@ -210,6 +208,8 @@ window.initializePins = (function () {
     // Навешиваем обработчик нажатия мыши на аватар диалога.
     pinMain.addEventListener('mousedown', function (event) {
       event.preventDefault();
+
+      pinMain.style.zIndex = 101;
 
       // Проверим, не перетаскиваем ли мы диалог и если да, то снимем старые обработчики нажатия на мышь
       if (isDragging) {
