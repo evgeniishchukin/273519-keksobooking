@@ -83,7 +83,7 @@ window.initializePins = (function () {
     // Обнулим массив с данными
     dialogData = [];
 
-    // Создаем цикл, чтобы пройтись по пинам
+    // Создаем цикл, чтобы пройтись по пинам (вынести функцию, и запускать ее в цикле, а не создавать, еще можно сократить)
     for (var i = 0, j = 0; i < amount; i++) {
       var validPin = function () {
         return (
@@ -248,7 +248,6 @@ window.initializePins = (function () {
         }
         activeElement = activeElement.parentNode;
       }
-
     }
   }
 

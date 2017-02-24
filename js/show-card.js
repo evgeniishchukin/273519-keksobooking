@@ -20,13 +20,14 @@ window.showCard = function (dialogData) {
     for (var i = 0; i < elementsArray.length; i++) {
       if (elementsArray[i].classList.contains(classNameActive)) {
         var elementIndex = i - 1;
+        break;
       }
     }
 
     // Копируем диалог из шаблона
     var newDialog = dialogToClone.cloneNode(true);
 
-    // Задаем функцию перевода наименования жилья
+    // Задаем функцию перевода наименования жилья (можно сделать как объект!!!!!!!)
     var filterByType = function (type) {
       var typeValue = null;
       switch (type) {
@@ -55,6 +56,7 @@ window.showCard = function (dialogData) {
     var dialogPhotos = newDialog.querySelector('.lodge__photos');
 
 
+    // Сделать одной переменной убрав dialogData[elementIndex]!!!!!!!
     dialogAvatar.src = dialogData[elementIndex].author.avatar;
     dialogTitle.innerText = dialogData[elementIndex].offer.title;
     dialogAddress.innerText = dialogData[elementIndex].offer.address;
