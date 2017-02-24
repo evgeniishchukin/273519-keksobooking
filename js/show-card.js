@@ -92,6 +92,92 @@ window.showCard = function (dialogData) {
   // Запускаем отрисовку диалога
   renderDialog();
 
+  // СОЗДАЕМ ФУНКЦИЮ ПЕРЕТАСКИВАНИЯ ДИАЛОГА
+  (function () {
+    var dialog = document.querySelector('.dialog');
+    var dialogPanel = dialog.querySelector('.dialog__panel');
+    var dialogTitle = dialog.querySelector('.dialog__title');
+    var dialogAvatarHandler = dialog.querySelector('.dialog__avatar');
+    var startPoint;
+
+    // Определим координаты окна родителя и дополнительные координаты для расчета пределов перемещения элемента
+    var dialogParentCoordinates = dialog.parentNode.getBoundingClientRect();
+    var dialogCoordinates = dialog.getBoundingClientRect();
+    var dialogPanelCoordinates = dialogPanel.getBoundingClientRect();
+    var dialogTitleCoordinates = dialogTitle.getBoundingClientRect();
+
+    // Определим предел перемещения элемента
+    var moveLimitX = dialogParentCoordinates.width - dialogCoordinates.width;
+    var moveLimitY = dialogParentCoordinates.height - (dialogPanelCoordinates.height + dialogTitleCoordinates.height);
+
+    // Добавим функцию обработки движения мыши
+    var onMouseMove = function (moveEvent) {
+      moveEvent.preventDefault();
+
+      var shift = {
+        x: startPoint.x - moveEvent.clientX,
+        y: startPoint.y - moveEvent.clientY
+      };
+
+      // Зададим ограничение на перемещение элемента
+      if (dialog.offsetLeft - shift.x > moveLimitX) {
+        dialog.style.left = moveLimitX + 'px';
+      } else if (dialog.offsetLeft - shift.x < 0) {
+        dialog.style.left = 0;
+      } else {
+        dialog.style.left = (dialog.offsetLeft - shift.x) + 'px';
+      }
+
+      if (dialog.offsetTop - shift.y > moveLimitY) {
+        dialog.style.top = moveLimitY + 'px';
+      } else if (dialog.offsetTop - shift.y < 0) {
+        dialog.style.top = 0;
+      } else {
+        dialog.style.top = (dialog.offsetTop - shift.y) + 'px';
+      }
+
+      startPoint = {
+        x: moveEvent.clientX,
+        y: moveEvent.clientY
+      };
+    };
+
+    // Уберем лишнее навешивание обработчиков, для этого объявим переменную проверки перетаскивания
+    var isDragging = false;
+
+    // Снимем обработчик нажатия на мышь
+    var onMouseUp = function (upEvent) {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      // При снятии нажатия, переменная проверки перетаскивания получит значение false;
+      isDragging = false;
+    };
+
+    // Навешиваем обработчик нажатия мыши на аватар диалога.
+    dialogAvatarHandler.addEventListener('mousedown', function (event) {
+      event.preventDefault();
+
+      // Проверим, не перетаскиваем ли мы диалог и если да, то снимем старые обработчики нажатия на мышь
+      if (isDragging) {
+        onMouseUp();
+      }
+
+      // При нажатии переменная проверки перетаскивания получит значение true;
+      isDragging = true;
+
+      // Сохраним начальные координаты
+      startPoint = {
+        x: event.clientX,
+        y: event.clientY
+      };
+
+      // Включим обработчики действий с мышью
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+  })();
+
   // Определяем элементы для работы с диалогом
   var dialogNameClose = document.querySelector('.dialog__close');
 
