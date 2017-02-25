@@ -54,12 +54,17 @@ window.initializePins = (function () {
 
   // Запускаем ожидание изменения параметров фильтра
   pinFilter.addEventListener('change', function () {
-    var dialog = document.querySelector('.dialog');
+    // var dialog = document.querySelector('.dialog');
 
     updateFilters();
-    if (dialog) {
-      dialog.remove();
+    var dialogs = document.querySelectorAll('.dialog');
+
+    if (dialogs.length > 0) {
+      for (var l = 0; l < dialogs.length; l++) {
+        dialogs[l].remove();
+      }
     }
+
     renderPins(window.similarApartments.length, parentElement);
   });
 
@@ -233,8 +238,7 @@ window.initializePins = (function () {
 
   // Определяем функцию активирования пинов
   function activateElement(event, parentEl) {
-    window.activeElement = event.target;
-    var activeElement = window.activeElement;
+    var activeElement = event.target;
 
     // Выполним проверку при нажатии, является ли данный пин главным, если нет, то выполняем активацию
     if (!activeElement.classList.contains('pin__main') && !activeElement.parentNode.classList.contains('pin__main')) {
@@ -248,7 +252,7 @@ window.initializePins = (function () {
             deactivateElements();
             activeElement.classList.add(classNameActive);
             activeElement.setAttribute('aria-pressed', true);
-            window.showCard(dialogData);
+            window.showCard(dialogData, activeElement);
           }
           return;
         }
