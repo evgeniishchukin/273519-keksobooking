@@ -81,7 +81,7 @@ window.initializePins = (function () {
     }
 
     // Определим функцию на проверку валидности пина
-    var validPin = function (index, apartmentsDataIndex) {
+    var validPin = function (apartmentsDataIndex) {
       return (
         // Проверка соответсвия по типу
           (filterParametrs.type === 'any' || filterParametrs.type === apartmentsDataIndex.offer.type) &&
@@ -114,7 +114,7 @@ window.initializePins = (function () {
       var apartmentsDataIndex = window.similarApartments[i];
 
       // Проверяем можно ли данный пин отрисовывать в DOM
-      if (validPin(i, apartmentsDataIndex)) {
+      if (validPin(apartmentsDataIndex)) {
         // клонируем новый пин из шаблона
         var newPin = elementToClone.cloneNode(true);
         var imageOfPin = newPin.querySelector('.rounded');
