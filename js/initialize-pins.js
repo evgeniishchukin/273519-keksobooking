@@ -54,6 +54,8 @@ window.initializePins = (function () {
 
   // Запускаем ожидание изменения параметров фильтра
   pinFilter.addEventListener('change', function () {
+    var dialog = document.querySelector('.dialog');
+
     updateFilters();
     var dialogs = document.querySelectorAll('.dialog');
 
