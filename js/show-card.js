@@ -177,12 +177,6 @@
       });
     })();
 
-    var removeOldDialog = function (oldDialog) {
-      if (oldDialog) {
-        oldDialog.remove();
-      }
-    };
-
     // Определяем элементы для работы с диалогом
     var dialogNameClose = document.querySelector('.dialog__close');
 
