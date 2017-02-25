@@ -74,19 +74,14 @@ window.initializePins = (function () {
     var elementToClone = templateElement.content.querySelector('.pin');
 
     // Удаляем все ранее созданные элементы
-    var pins = parentElement.querySelectorAll('.pin');
+    var elementsArray = parentElement.querySelectorAll('.pin');
 
-    if (pins) {
-      var elementsArray = document.querySelectorAll('.pin');
-
-      for (var k = 1; k < elementsArray.length; k++) {
-        elementsArray[k].remove();
-      }
+    for (var k = 1; k < elementsArray.length; k++) {
+      elementsArray[k].remove();
     }
 
     // Определим функцию на проверку валидности пина
-    var validPin = function (index) {
-      var apartmentsDataIndex = window.similarApartments[index];
+    var validPin = function (index, apartmentsDataIndex) {
       return (
         // Проверка соответсвия по типу
           (filterParametrs.type === 'any' || filterParametrs.type === apartmentsDataIndex.offer.type) &&
@@ -116,12 +111,10 @@ window.initializePins = (function () {
     // Создаем цикл, чтобы пройтись по пинам
     for (var i = 0, j = 0; i < amount; i++) {
       // Определим валидность пина
-      validPin(i);
-
       var apartmentsDataIndex = window.similarApartments[i];
 
       // Проверяем можно ли данный пин отрисовывать в DOM
-      if (validPin(i)) {
+      if (validPin(i, apartmentsDataIndex)) {
         // клонируем новый пин из шаблона
         var newPin = elementToClone.cloneNode(true);
         var imageOfPin = newPin.querySelector('.rounded');

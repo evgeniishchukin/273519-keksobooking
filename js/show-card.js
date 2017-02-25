@@ -29,15 +29,9 @@ window.showCard = function (dialogData) {
 
     // Задаем переменную перевода наименования жилья
     var types = {
-      'flat': function () {
-        return 'Квартира';
-      },
-      'bungalo': function () {
-        return 'Бунгало';
-      },
-      'house': function () {
-        return 'Дом';
-      }
+      'flat': 'Квартира',
+      'bungalo': 'Бунгало',
+      'house': 'Дом'
     };
 
     // Наполняем диалог содержимым
@@ -57,7 +51,7 @@ window.showCard = function (dialogData) {
     dialogTitle.innerText = dialogDataIndex.offer.title;
     dialogAddress.innerText = dialogDataIndex.offer.address;
     dialogPrice.innerText = dialogDataIndex.offer.price + ' руб./сутки';
-    dialogType.innerText = types[dialogDataIndex.offer.type]();
+    dialogType.innerText = types[dialogDataIndex.offer.type];
     dialogRoomsAndGuests.innerText = 'Комнат: ' + dialogDataIndex.offer.rooms + ', Мест: ' + dialogDataIndex.offer.guests;
     dialogCheckinTime.innerHTML = 'Время заезда: ' + dialogDataIndex.offer.checkin + '<br>' + 'Время выезда: ' + dialogDataIndex.offer.checkout;
 
