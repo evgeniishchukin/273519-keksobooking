@@ -42,6 +42,7 @@
       var dialogDescription = newDialog.querySelector('.lodge__description');
       var dialogPhotos = newDialog.querySelector('.lodge__photos');
 
+
       dialogAvatar.src = dialogDataIndex.author.avatar;
       dialogTitle.innerText = dialogDataIndex.offer.title;
       dialogAddress.innerText = dialogDataIndex.offer.address;
@@ -57,11 +58,6 @@
         featureImage.classList.add('feature__image--' + dialogDataIndex.offer.features[i]);
 
         dialogFeatures.appendChild(featureImage);
-        
-    for (var i = 0; i < elementsArray.length; i++) {
-      if (elementsArray[i].classList.contains(classNameActive)) {
-        var dialogDataIndex = dialogData[i - 1];
-        break;
       }
 
       dialogDescription.innerText = dialogDataIndex.offer.description;
@@ -82,53 +78,6 @@
 
       // Удаляем старые диалоги
       var dialogs = document.querySelectorAll('.dialog');
-      
-    // Задаем переменную перевода наименования жилья
-    var types = {
-      'flat': 'Квартира',
-      'bungalo': 'Бунгало',
-      'house': 'Дом'
-    };
-
-    // Наполняем диалог содержимым
-    var dialogAvatar = newDialog.querySelector('.dialog__avatar');
-    var dialogTitle = newDialog.querySelector('.lodge__title');
-    var dialogAddress = newDialog.querySelector('.lodge__address');
-    var dialogPrice = newDialog.querySelector('.lodge__price');
-    var dialogType = newDialog.querySelector('.lodge__type');
-    var dialogRoomsAndGuests = newDialog.querySelector('.lodge__rooms-and-guests');
-    var dialogCheckinTime = newDialog.querySelector('.lodge__checkin-time');
-    var dialogFeatures = newDialog.querySelector('.lodge__features');
-    var dialogDescription = newDialog.querySelector('.lodge__description');
-    var dialogPhotos = newDialog.querySelector('.lodge__photos');
-
-
-    dialogAvatar.src = dialogDataIndex.author.avatar;
-    dialogTitle.innerText = dialogDataIndex.offer.title;
-    dialogAddress.innerText = dialogDataIndex.offer.address;
-    dialogPrice.innerText = dialogDataIndex.offer.price + ' руб./сутки';
-    dialogType.innerText = types[dialogDataIndex.offer.type];
-    dialogRoomsAndGuests.innerText = 'Комнат: ' + dialogDataIndex.offer.rooms + ', Мест: ' + dialogDataIndex.offer.guests;
-    dialogCheckinTime.innerHTML = 'Время заезда: ' + dialogDataIndex.offer.checkin + '<br>' + 'Время выезда: ' + dialogDataIndex.offer.checkout;
-
-    for (i = 0; i < dialogDataIndex.offer.features.length; i++) {
-      var featureImage = document.createElement('span');
-
-      featureImage.classList.add('feature__image');
-      featureImage.classList.add('feature__image--' + dialogDataIndex.offer.features[i]);
-
-      dialogFeatures.appendChild(featureImage);
-    }
-
-    dialogDescription.innerText = dialogDataIndex.offer.description;
-
-    for (i = 0; i < dialogDataIndex.offer.photos.length; i++) {
-      var dialogPhoto = document.createElement('img');
-
-      dialogPhoto.setAttribute('width', '52');
-      dialogPhoto.setAttribute('height', '42');
-      dialogPhoto.setAttribute('alt', 'Фотография места');
-      dialogPhoto.setAttribute('src', dialogDataIndex.offer.photos[i]);
 
       if (dialogs.length > 1) {
         for (i = 0; i < dialogs.length - 1; i++) {
@@ -221,27 +170,12 @@
           x: event.clientX,
           y: event.clientY
         };
-      dialog.style.zIndex = 100;
-
-      // Проверим, не перетаскиваем ли мы диалог и если да, то снимем старые обработчики нажатия на мышь
-      if (isDragging) {
-        onMouseUp();
-      }
-
-      // При нажатии переменная проверки перетаскивания получит значение true;
-      isDragging = true;
 
         // Включим обработчики действий с мышью
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
       });
     })();
-
-    var removeOldDialog = function (oldDialog) {
-      if (oldDialog) {
-        oldDialog.remove();
-      }
-    };
 
     // Определяем элементы для работы с диалогом
     var dialogNameClose = document.querySelector('.dialog__close');
