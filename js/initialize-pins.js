@@ -287,7 +287,7 @@ window.initializePins = (function () {
     }
   });
 
-  // Возвращаем в глобальную область функцию проверки нажатия клавишии
+  // Возвращаем в глобальную область функцию проверки нажатия клавиши
   return {
     isActivationEvent: isActivationEvent,
 
